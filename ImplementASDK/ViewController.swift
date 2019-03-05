@@ -26,6 +26,8 @@ class ViewController: UIViewController, ASTableNodeDelegate {
     
     photoImages = Bundle.main.paths(forResourcesOfType: "png", inDirectory: "largeimage")
     
+    photoImages.sort()
+    
     tableNode.queryData(self)
   }
   
@@ -34,9 +36,14 @@ class ViewController: UIViewController, ASTableNodeDelegate {
     return photoImages.count
   }
   
-  func cellForRow(_ node: ASTableNode, row: Int) -> ASTableCellNode {
+  func cellForRow(_ node: ASTableNode, row: Int) -> ASTableCellNodeGenerator {
     
-    return ASTableCellNode(withPhoto: photoImages[row])
+    let photo = photoImages[row]
+    
+    return ASTableCellNodeGenerator(with: {
+      
+      ASTableCellNode(withPhoto: photo)
+    })
   }
 }
 

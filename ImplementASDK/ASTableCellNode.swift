@@ -8,12 +8,35 @@
 
 import UIKit
 
-class ASTableCellNode: UITableViewCell {
+class ASTableCellNodeGenerator: NSObject {
   
-  class Generator: NSObject {
+  typealias Generate = ()->ASTableCellNode
+  
+  var doNext:Generate
+  
+  var node:ASTableCellNode?
+  
+  init(with doNext:@escaping Generate) {
     
+    self.doNext = doNext
     
+    super.init()
   }
+  
+  func next() -> ASTableCellNode {
+    
+    node = doNext()
+    
+    return node!
+  }
+  
+  func prepare() -> Void {
+    
+    node = doNext()
+  }
+}
+
+class ASTableCellNode: UITableViewCell {
   
   init(withPhoto photo:String) {
     

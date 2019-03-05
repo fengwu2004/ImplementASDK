@@ -13,7 +13,7 @@ protocol ASTableNodeDelegate: NSObjectProtocol {
   
   func numerbOfRows(_ node:ASTableNode) -> Int
   
-  func cellForRow(_ node:ASTableNode, row:Int) -> ASTableCellNode
+  func cellForRow(_ node:ASTableNode, row:Int) -> ASTableCellNodeGenerator
 }
 
 class ASTableNode: UIView, UITableViewDelegate, UITableViewDataSource {
@@ -22,7 +22,7 @@ class ASTableNode: UIView, UITableViewDelegate, UITableViewDataSource {
   
   private weak var delegate:ASTableNodeDelegate!
   
-  private var cells = [ASTableCellNode]()
+  private var cells = [ASTableCellNodeGenerator]()
   
   required init?(coder aDecoder: NSCoder) {
     
@@ -56,9 +56,9 @@ class ASTableNode: UIView, UITableViewDelegate, UITableViewDataSource {
     
     for i in 0..<count {
       
-      let cell = self.delegate.cellForRow(self, row: i)
+      let cg = self.delegate.cellForRow(self, row: i)
       
-      cells.append(cell)
+      cells.append(cg)
     }
     
     tableview.reloadData()
@@ -71,7 +71,7 @@ class ASTableNode: UIView, UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    return cells[indexPath.row]
+    return cells[indexPath.row].node ?? cells[indexPath.row].next()
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
